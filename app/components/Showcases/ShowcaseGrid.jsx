@@ -96,12 +96,56 @@ class ShowcaseGrid extends Component {
                     : "Please login to use this functionality"
             },
             {
+                title: "showcases.htlc.title",
+                target: event => {
+                    thiz.props.history.push("/htlc");
+                },
+                description: "showcases.htlc.description",
+                icon: "htlc",
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
+            },
+            {
+                title: "showcases.prediction_market.title",
+                target: event => {
+                    thiz.props.history.push("/prediction");
+                },
+                description: "showcases.prediction_market.description",
+                icon: "prediction",
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
+            },
+            {
+                title: "showcases.merchant_protocol.title",
+                target: event => {
+                    thiz.props.history.push("/invoice/request");
+                },
+                description: "showcases.merchant_protocol.description",
+                icon: "merchant",
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
+            },
+            {
                 title: "showcases.timed_transfer.title",
                 target: () => {},
                 description: "showcases.timed_transfer.description",
                 icon: "alarm",
                 disabled: true,
                 comingSoon: true
+            },
+            {
+                title: "showcases.instant_trade.title",
+                target: event => {
+                    thiz.props.history.push("/quick-trade");
+                },
+                description: "showcases.instant_trade.description",
+                icon: "instant-trade",
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
             }
             // .... even more tiles in this list
         ];

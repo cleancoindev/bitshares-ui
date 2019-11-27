@@ -5,6 +5,7 @@ import AssetWrapper from "./AssetWrapper";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
 import {Popover} from "bitshares-ui-style-guide";
+import {ChainStore, FetchChainObjects} from "bitsharesjs";
 
 class AssetName extends React.Component {
     static propTypes = {
@@ -19,20 +20,46 @@ class AssetName extends React.Component {
         dataPlace: "bottom"
     };
 
-    shouldComponentUpdate(np) {
+    constructor(props) {
+        super(props);
+        this.state = {
+            assetIssuerName: null
+        };
+        this._load();
+    }
+
+    shouldComponentUpdate(np, ns) {
         return (
             this.props.replace !== np.replace ||
             this.props.asset !== np.asset ||
             this.props.noPrefix !== np.noPrefix ||
             this.props.noTip !== np.noTip ||
-            this.props.dataPlace !== np.dataPlace
+            this.props.dataPlace !== np.dataPlace ||
+            this.state.assetIssuerName !== ns.assetIssuerName
         );
+    }
+
+    _load() {
+        // cache asset issuer name
+        if (!this.state.assetIssuerName) {
+            FetchChainObjects(ChainStore.getAccountName, [
+                this.props.asset.get("issuer")
+            ]).then(result => {
+                // re-render, ChainStore cache now has the object
+                this.setState({assetIssuerName: result[0]});
+            });
+        }
+    }
+
+    componentDidUpdate() {
+        this._load();
     }
 
     render() {
         let {replace, asset, noPrefix, customClass, noTip} = this.props;
         if (!asset) return null;
         const name = asset.get("symbol");
+        const assetIssuerName = this.state.assetIssuerName;
         const isBitAsset = asset.has("bitasset");
         const isPredMarket =
             isBitAsset && asset.getIn(["bitasset", "is_prediction_market"]);
@@ -108,6 +135,12 @@ class AssetName extends React.Component {
                         {optional !== "" && <br />}
                         {optional !== "" && <br />}
                         {optional}
+                        <br />
+                        <br />
+                        {assetIssuerName &&
+                            counterpart.translate("explorer.assets.issuer") +
+                                ": " +
+                                assetIssuerName}
                     </div>
                 );
                 return (
@@ -115,7 +148,7 @@ class AssetName extends React.Component {
                         placement={this.props.dataPlace}
                         content={popoverContent}
                         title={title}
-                        trigger="hover"
+                        mouseEnterDelay={0.5}
                     >
                         {assetDiv}
                     </Popover>
@@ -145,6 +178,12 @@ class AssetName extends React.Component {
                 let popoverContent = (
                     <div style={{maxWidth: "25rem"}}>
                         {desc.short ? desc.short : desc.main || ""}
+                        <br />
+                        <br />
+                        {assetIssuerName &&
+                            counterpart.translate("explorer.assets.issuer") +
+                                ": " +
+                                assetIssuerName}
                     </div>
                 );
                 return (
@@ -152,7 +191,7 @@ class AssetName extends React.Component {
                         placement={this.props.dataPlace}
                         content={popoverContent}
                         title={title}
-                        trigger="hover"
+                        mouseEnterDelay={0.5}
                     >
                         {assetDiv}
                     </Popover>
@@ -166,6 +205,8 @@ AssetName = AssetWrapper(AssetName);
 
 export default class AssetNameWrapper extends React.Component {
     render() {
-        return <AssetName {...this.props} asset={this.props.name} />;
+        return !this.props.name ? null : (
+            <AssetName {...this.props} asset={this.props.name} />
+        );
     }
 }

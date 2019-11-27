@@ -2,11 +2,25 @@ import Immutable from "immutable";
 import alt from "alt-instance";
 import GatewayActions from "actions/GatewayActions";
 import ls from "common/localStorage";
+import {allowedGateway} from "../branding";
 
 const STORAGE_KEY = "__graphene__";
 let ss = new ls(STORAGE_KEY);
 
 class GatewayStore {
+    static isAllowed(backer) {
+        return allowedGateway(backer);
+    }
+
+    static anyAllowed() {
+        return allowedGateway();
+    }
+
+    static isDown(backer) {
+        // call another static method with this
+        return !!this.getState().down.get(backer);
+    }
+
     constructor() {
         this.backedCoins = Immutable.Map(ss.get("backedCoins", {}));
         this.bridgeCoins = Immutable.Map(
@@ -37,7 +51,8 @@ class GatewayStore {
             onFetchCoins: GatewayActions.fetchCoins,
             onFetchCoinsSimple: GatewayActions.fetchCoinsSimple,
             onFetchCoinsNewApi: GatewayActions.fetchCoinsNewApi,
-            onFetchPairs: GatewayActions.fetchPairs
+            onFetchPairs: GatewayActions.fetchPairs,
+            onTemporarilyDisable: GatewayActions.temporarilyDisable
         });
     }
 
@@ -107,6 +122,19 @@ class GatewayStore {
         }
         if (down) {
             this.down = this.down.set(down, true);
+        }
+    }
+
+    onTemporarilyDisable({backer}) {
+        this.down = this.down.set(backer, true);
+
+        if (this.backedCoins.get(backer)) {
+            this.backedCoins = this.backedCoins.remove(backer);
+            ss.set("backedCoins", this.backedCoins.toJS());
+        }
+        if (this.bridgeCoins.get(backer)) {
+            this.bridgeCoins = this.bridgeCoins.remove(backer);
+            ss.set("bridgeCoins", this.bridgeCoins.toJS());
         }
     }
 }
