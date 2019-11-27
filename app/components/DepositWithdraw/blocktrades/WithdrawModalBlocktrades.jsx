@@ -106,13 +106,9 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     getIssuerAddress() {
-        const { exchangeId } = this.props;
-        const { withdraw_address, memo } = this.state;
-        return fetchIntermediateAddress(
-            exchangeId,
-            withdraw_address,
-            memo
-        );
+        const {exchangeId} = this.props;
+        const {withdraw_address, memo} = this.state;
+        return fetchIntermediateAddress(exchangeId, withdraw_address, memo);
     }
 
     showConfirmationModal() {
@@ -270,7 +266,8 @@ class WithdrawModalBlocktrades extends React.Component {
                 if (this.state.withdraw_address === new_withdraw_address) {
                     this.setState({
                         withdraw_address_check_in_progress: false,
-                        withdraw_address_is_valid: validationData.valid_recipient
+                        withdraw_address_is_valid:
+                            validationData.valid_recipient
                     });
                 }
             });
@@ -412,11 +409,11 @@ class WithdrawModalBlocktrades extends React.Component {
                         sendAmount.getAmount(),
                         asset.get("id"),
                         this.props.output_coin_type +
-                        ":" +
-                        this.state.withdraw_address +
-                        (this.state.memo
-                            ? ":" + new Buffer(this.state.memo, "utf-8")
-                            : ""),
+                            ":" +
+                            this.state.withdraw_address +
+                            (this.state.memo
+                                ? ":" + new Buffer(this.state.memo, "utf-8")
+                                : ""),
                         null,
                         feeAmount ? feeAmount.asset_id : "1.3.0"
                     );
@@ -488,14 +485,15 @@ class WithdrawModalBlocktrades extends React.Component {
                 parseInt(amount * precision, 10),
                 asset.get("id"),
                 this.props.output_coin_type +
-                ":" +
-                this.state.withdraw_address +
-                (this.state.memo
-                    ? ":" + new Buffer(this.state.memo, "utf-8")
-                    : ""),
-            null,
-            feeAmount ? feeAmount.asset_id : fee_asset_id
-        );
+                    ":" +
+                    this.state.withdraw_address +
+                    (this.state.memo
+                        ? ":" + new Buffer(this.state.memo, "utf-8")
+                        : ""),
+                null,
+                feeAmount ? feeAmount.asset_id : fee_asset_id
+            );
+        }
     }
 
     onDropDownList() {
