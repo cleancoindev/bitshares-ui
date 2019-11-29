@@ -65,7 +65,7 @@ const isGatewayTemporarilyDisabled = async function(gatewayKey) {
 
     if (!onChainConfig.gateways[gatewayKey]) return false;
 
-    if (onChainConfig.gateways[gatewayKey].enabled === false) return true;
+    if (onChainConfig.gateways[gatewayKey].enabled === false && gatewayKey !== "OPEN") return true;
 
     return false;
 };
