@@ -317,7 +317,8 @@ class App extends React.Component {
         setTimeout(() => {
             let hasLoggedIn =
                 AccountStore.getState().myActiveAccounts.length > 0 ||
-                !!AccountStore.getState().passwordAccount;
+                !!AccountStore.getState().passwordAccount ||
+                !!AccountStore.getState().currentAccount;
             if (!hasLoggedIn) {
                 this._ensureExternalServices();
             } else {
