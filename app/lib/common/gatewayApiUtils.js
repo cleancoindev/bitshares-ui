@@ -1,9 +1,10 @@
-function mapExchange({ depositExchange, withdrawalExchange }) {
+function mapExchange({depositExchange, withdrawalExchange}) {
     return {
         backingCoinType: depositExchange.source.asset,
         deposit: {
-            healthy: depositExchange.options.healthy &&
-            depositExchange.options.status,
+            healthy:
+                depositExchange.options.healthy &&
+                depositExchange.options.status,
             maintenanceReason: depositExchange.options.maintenance_reason,
             amount: depositExchange.amount.destination,
             memo: depositExchange.memo.destination,
@@ -17,8 +18,9 @@ function mapExchange({ depositExchange, withdrawalExchange }) {
         symbol: withdrawalExchange.source.asset,
         walletType: depositExchange.source.asset,
         withdrawal: {
-            healthy: withdrawalExchange.options.healthy &&
-            withdrawalExchange.options.status,
+            healthy:
+                withdrawalExchange.options.healthy &&
+                withdrawalExchange.options.status,
             maintenanceReason: withdrawalExchange.options.maintenance_reason,
             limits: withdrawalExchange.limit.source,
             amount: withdrawalExchange.amount.destination,
@@ -26,8 +28,11 @@ function mapExchange({ depositExchange, withdrawalExchange }) {
             exchangeId: withdrawalExchange.id
         },
         isNewApi: true,
-        withdrawalAllowed: withdrawalExchange.options.healthy,
-        depositAllowed: depositExchange.options.healthy
+        withdrawalAllowed:
+            withdrawalExchange.options.healthy &&
+            withdrawalExchange.options.status,
+        depositAllowed:
+            depositExchange.options.healthy && depositExchange.options.status
     };
 }
 

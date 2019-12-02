@@ -84,10 +84,19 @@ export function getIntermediateAccount(symbol, backedCoins) {
 
 export function getBackedCoin(symbol, backedCoins) {
     let {selectedGateway} = getAssetAndGateway(symbol);
+    const newOlApiBackedCoins = backedCoins.get("newApi", []);
+    let newOlApiCoin;
+    if (newOlApiBackedCoins.length && selectedGateway === "OPEN") {
+        newOlApiCoin = newOlApiBackedCoins.find(c => {
+            return c.symbol.toUpperCase() === symbol.toUpperCase();
+        });
+    }
     return (
+        newOlApiCoin ||
         backedCoins.get(selectedGateway, []).find(c => {
             return c.symbol.toUpperCase() === symbol.toUpperCase();
-        }) || {}
+        }) ||
+        {}
     );
 }
 

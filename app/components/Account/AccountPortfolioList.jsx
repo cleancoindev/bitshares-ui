@@ -1003,11 +1003,14 @@ class AccountPortfolioList extends React.Component {
                 this.props.backedCoins
             );
             const canDeposit =
-                (backedCoin && backedCoin.depositAllowed) ||
+                (backedCoin &&
+                    backedCoin.depositAllowed &&
+                    backedCoin.isAvailable) ||
                 asset.get("symbol") == "BTS";
 
             const canWithdraw =
                 backedCoin &&
+                backedCoin.isAvailable &&
                 backedCoin.withdrawalAllowed &&
                 (hasBalance && balanceObject.get("balance") != 0);
 
