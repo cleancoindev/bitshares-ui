@@ -177,7 +177,7 @@
         "oidc-client": "^1.8.2",
         "perfect-scrollbar": "git+https://github.com/bitshares/perfect-scrollbar.git",
         "prop-types": "^15.6.1",
-        "qrcode": "^1.3.0",
+        "qrcode": "^1.3.4",
         "qrcode.react": "^0.7.1",
         "query-string": "^6.1.0",
         "react": "^16.4.1",
